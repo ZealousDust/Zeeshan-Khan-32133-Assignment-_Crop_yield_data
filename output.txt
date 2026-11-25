@@ -1,0 +1,180 @@
+/home/claude/solution.py:41: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  print(crop_df.describe(include="object"))
+
+======================================================================
+1. Load crop_yield.csv into crop_df
+======================================================================
+Shape: (3000, 9)
+
+======================================================================
+2. First 10 rows
+======================================================================
+  FARM_ID CROP_TYPE  YIELD_KG  AREA_ACRES HARVEST_DATE    DISTRICT SEASON FERTILIZER_USED  YIELD_VALUE
+0    F001     Wheat    1500.0         4.0   01/01/2023     Sialkot   Rabi             Yes        30000
+1    F002     Wheat    1500.0         5.0   02/01/2023      Multan   Rabi              No        30000
+2    F003     Wheat    2500.0         5.0   03/01/2023  Faisalabad   Rabi             Yes        50000
+3    F004     Wheat    1500.0         NaN   04/01/2023      Multan   Rabi             Yes        30000
+4    F005      Rice    1500.0         4.0   05/01/2023  Faisalabad   Rabi              No        30000
+5    F006      Rice    2000.0         6.0   06/01/2023  Faisalabad   Rabi             Yes        40000
+6    F007     Maize    1500.0         6.0   07/01/2023  Faisalabad   Rabi              No        30000
+7    F008     Wheat    1500.0         5.0   08/01/2023      Lahore   Rabi              No        30000
+8    F009     Wheat    2000.0         5.0   09/01/2023  Faisalabad   Rabi             Yes        40000
+9    F010     Wheat    1500.0         3.0   10/01/2023  Faisalabad   Rabi             Yes        30000
+
+======================================================================
+3. Missing values per column
+======================================================================
+FARM_ID              0
+CROP_TYPE            0
+YIELD_KG           330
+AREA_ACRES         144
+HARVEST_DATE         0
+DISTRICT           126
+SEASON               0
+FERTILIZER_USED    318
+YIELD_VALUE          0
+dtype: int64
+
+======================================================================
+4. Data types
+======================================================================
+FARM_ID                str
+CROP_TYPE              str
+YIELD_KG           float64
+AREA_ACRES         float64
+HARVEST_DATE           str
+DISTRICT               str
+SEASON                 str
+FERTILIZER_USED        str
+YIELD_VALUE          int64
+dtype: object
+
+======================================================================
+5. Statistical summary - numeric columns
+======================================================================
+          YIELD_KG   AREA_ACRES   YIELD_VALUE
+count  2670.000000  2856.000000   3000.000000
+mean   2014.232210     4.420168  39657.780000
+std     407.846962     0.979259   8405.078755
+min    1500.000000     3.000000  20068.000000
+25%    1500.000000     4.000000  30000.000000
+50%    2000.000000     4.000000  40000.000000
+75%    2500.000000     5.000000  50000.000000
+max    2500.000000     6.000000  50000.000000
+
+======================================================================
+6. Statistical summary - object (text) columns
+======================================================================
+       FARM_ID CROP_TYPE HARVEST_DATE    DISTRICT SEASON FERTILIZER_USED
+count     3000      3000         3000        2874   3000            2682
+unique    3000         4         3000           4      2               2
+top       F001     Wheat   01/01/2023  Faisalabad   Rabi             Yes
+freq         1      1158            1         936   1528            1776
+
+======================================================================
+7. Drop rows where YIELD_KG is missing
+======================================================================
+Rows before: 3000, after: 2670, removed: 330
+
+======================================================================
+8. Fill AREA_ACRES missing values with the column mean
+======================================================================
+Mean used: 4.4127
+
+======================================================================
+9. Fill DISTRICT missing values with 'Unknown'
+======================================================================
+
+======================================================================
+10. Fill FERTILIZER_USED missing values with 'No'
+======================================================================
+
+======================================================================
+11. Fill YIELD_VALUE missing values with the column mean
+======================================================================
+Mean used: 40284.6442
+
+======================================================================
+12. Convert HARVEST_DATE to datetime (format %d/%m/%Y, errors='coerce')
+======================================================================
+Invalid dates turned into NaT: 0
+
+======================================================================
+13. Remove the letter 'F' from FARM_ID and convert to int
+======================================================================
+0    1
+1    2
+2    3
+3    4
+4    5
+Name: FARM_ID, dtype: int64
+
+======================================================================
+14. Re-check missing values after cleaning
+======================================================================
+FARM_ID            0
+CROP_TYPE          0
+YIELD_KG           0
+AREA_ACRES         0
+HARVEST_DATE       0
+DISTRICT           0
+SEASON             0
+FERTILIZER_USED    0
+YIELD_VALUE        0
+dtype: int64
+
+======================================================================
+15. Re-check data types after cleaning
+======================================================================
+FARM_ID                     int64
+CROP_TYPE                     str
+YIELD_KG                  float64
+AREA_ACRES                float64
+HARVEST_DATE       datetime64[us]
+DISTRICT                      str
+SEASON                        str
+FERTILIZER_USED               str
+YIELD_VALUE                 int64
+dtype: object
+
+======================================================================
+16. Total yield (KG) by crop type
+======================================================================
+            YIELD_KG
+CROP_TYPE           
+Maize      1112500.0
+Rice       1638000.0
+Sugarcane   592000.0
+Wheat      2035500.0
+
+======================================================================
+17. Bar chart - Total Yield by Crop Type (KG)
+======================================================================
+Saved total_yield_by_crop.png
+
+======================================================================
+18. Pivot table - total yield by harvest date (+ trend line chart)
+======================================================================
+              YIELD_KG
+HARVEST_DATE          
+2023-01-01      1500.0
+2023-01-02      1500.0
+2023-01-03      2500.0
+2023-01-04      1500.0
+2023-01-05      1500.0
+2023-01-06      2000.0
+2023-01-07      1500.0
+2023-01-08      1500.0
+2023-01-09      2000.0
+2023-01-10      1500.0
+2023-01-11      2000.0
+2023-01-13      1500.0
+2023-01-14      2000.0
+2023-01-16      2500.0
+2023-01-17      2000.0
+...
+Pivot rows: 2670
+Saved crop_yield_trend.png
+
+Saved crop_yield_cleaned.csv and yield_pivot_by_date.csv
